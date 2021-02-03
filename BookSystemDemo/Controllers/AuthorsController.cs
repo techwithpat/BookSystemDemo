@@ -1,21 +1,19 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BookSystemDemo.Data;
 using BookSystemDemo.Models;
+using BookSystemDemo.Repositories;
 
 namespace BookSystemDemo.Controllers
 {
     public class AuthorsController : Controller
     {
-        private readonly BookContext _context;
+        private readonly IRepository<Author, int> authorRepository;
 
-        public AuthorsController(BookContext context) => _context = context;
+        public AuthorsController(IRepository<Author, int> authorRepository) => this.authorRepository = authorRepository;
 
         public async Task<IActionResult> Index()
         {
-            var authors = await _context.Authors.OrderBy(a => a.LastName).ToListAsync();
+            var authors = await authorRepository.GetAll();
             return View(authors);
         }
                
@@ -30,8 +28,8 @@ namespace BookSystemDemo.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(author);
-                await _context.SaveChangesAsync();
+                await authorRepository.Insert(author);
+                await authorRepository.Save();
                 return RedirectToAction(nameof(Index));
             }
             return View(author);
@@ -44,8 +42,7 @@ namespace BookSystemDemo.Controllers
                 return NotFound();
             }
 
-            var author = await _context.Authors
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var author = await authorRepository.GetById((int)id);
             if (author == null)
             {
                 return NotFound();
@@ -59,15 +56,9 @@ namespace BookSystemDemo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var author = await _context.Authors.FindAsync(id);
-            _context.Authors.Remove(author);
-            await _context.SaveChangesAsync();
+            await authorRepository.Delete(id);
+            await authorRepository.Save();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool AuthorExists(int id)
-        {
-            return _context.Authors.Any(e => e.Id == id);
         }
     }
 }

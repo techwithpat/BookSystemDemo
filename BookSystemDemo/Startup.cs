@@ -3,13 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using BookSystemDemo.Data;
-using BookSystemDemo.Repositories;
 
 namespace BookSystemDemo
 {
@@ -25,8 +20,6 @@ namespace BookSystemDemo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IBookRepository, BookRepository>();
-
             services.AddControllersWithViews();
 
             services.AddDbContext<BookContext>(options =>

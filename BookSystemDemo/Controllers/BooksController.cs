@@ -15,7 +15,7 @@ namespace BookSystemDemo.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var books = await _context.Book.Include(b => b.Author)
+            var books = await _context.Books.Include(b => b.Author)
                                            .Include(b => b.Category)
                                            .ToListAsync();
             return View(books);
@@ -49,7 +49,7 @@ namespace BookSystemDemo.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Book
+            var book = await _context.Books
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (book == null)
             {
@@ -63,15 +63,15 @@ namespace BookSystemDemo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var book = await _context.Book.FindAsync(id);
-            _context.Book.Remove(book);
+            var book = await _context.Books.FindAsync(id);
+            _context.Books.Remove(book);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool BookExists(int id)
         {
-            return _context.Book.Any(e => e.Id == id);
+            return _context.Books.Any(e => e.Id == id);
         }
 
         private async void PopulateAuthorsList()

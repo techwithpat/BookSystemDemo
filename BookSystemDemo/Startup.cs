@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using BookSystemDemo.Data;
+using BookSystemDemo.Repositories;
+using BookSystemDemo.Models;
 
 namespace BookSystemDemo
 {
@@ -20,6 +22,10 @@ namespace BookSystemDemo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IRepository<Book, int>, BookRepository>();
+            services.AddScoped<IRepository<Author, int>, AuthorRepository>();
+            services.AddScoped<IRepository<Category, int>, CategoryRepository>();
+
             services.AddControllersWithViews();
 
             services.AddDbContext<BookContext>(options =>

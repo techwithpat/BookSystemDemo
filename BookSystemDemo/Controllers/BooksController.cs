@@ -11,10 +11,7 @@ namespace BookSystemDemo.Controllers
     {
         private readonly BookContext _context;
 
-        public BooksController(BookContext context)
-        {
-            _context = context;
-        }
+        public BooksController(BookContext context) => _context = context;
 
         public async Task<IActionResult> Index()
         {
@@ -62,7 +59,6 @@ namespace BookSystemDemo.Controllers
             return View(book);
         }
 
-        // POST: Books/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

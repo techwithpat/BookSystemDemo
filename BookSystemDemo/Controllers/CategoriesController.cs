@@ -11,10 +11,7 @@ namespace BookSystemDemo.Controllers
     {
         private readonly BookContext _context;
 
-        public CategoriesController(BookContext context)
-        {
-            _context = context;
-        }
+        public CategoriesController(BookContext context) => _context = context;
 
         public async Task<IActionResult> Index()
         {

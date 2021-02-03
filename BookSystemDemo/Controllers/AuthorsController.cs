@@ -11,10 +11,7 @@ namespace BookSystemDemo.Controllers
     {
         private readonly BookContext _context;
 
-        public AuthorsController(BookContext context)
-        {
-            _context = context;
-        }
+        public AuthorsController(BookContext context) => _context = context;
 
         public async Task<IActionResult> Index()
         {
@@ -40,7 +37,6 @@ namespace BookSystemDemo.Controllers
             return View(author);
         }
 
-        // GET: Authors/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

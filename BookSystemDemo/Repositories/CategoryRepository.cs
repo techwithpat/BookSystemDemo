@@ -1,5 +1,6 @@
-﻿using BookSystemDemo.Models;
-using System;
+﻿using BookSystemDemo.Data;
+using BookSystemDemo.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,34 +9,33 @@ namespace BookSystemDemo.Repositories
 {
     public class CategoryRepository : IRepository<Category, int>
     {
-        public CategoryRepository()
-        {
+        private readonly BookContext context;
+        public CategoryRepository(BookContext context) => this.context = context;
 
+        public async Task<IEnumerable<Category>> GetAll()
+        => await context.Categories.OrderBy(a => a.Name).ToListAsync();
+
+        public async Task<Category> GetById(int id)
+         => await context.Categories.FindAsync(id);
+
+        public async Task<Category> Insert(Category entity)
+        {
+            await context.Categories.AddAsync(entity);
+            return entity;
         }
 
-        public Task<IEnumerable<Category>> GetAll()
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            var book = await context.Categories.FindAsync(id);
+            if (book != null)
+            {
+                context.Remove(book);
+            }
         }
 
-        public Task<Category> GetById(int id)
+        public async Task Save()
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<Category> Insert(Category entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Save()
-        {
-            throw new NotImplementedException();
+            await context.SaveChangesAsync();
         }
     }
 }

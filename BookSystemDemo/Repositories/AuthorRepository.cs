@@ -1,4 +1,6 @@
-﻿using BookSystemDemo.Models;
+﻿using BookSystemDemo.Data;
+using BookSystemDemo.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,34 +10,34 @@ namespace BookSystemDemo.Repositories
 {
     public class AuthorRepository : IRepository<Author, int>
     {
-        public AuthorRepository()
-        {
+        private readonly BookContext context;
 
+        public AuthorRepository(BookContext context) => this.context = context;
+
+        public async Task<IEnumerable<Author>> GetAll() 
+            => await context.Authors.OrderBy(a => a.LastName).ToListAsync();
+
+        public async Task<Author> GetById(int id) 
+            => await context.Authors.FindAsync(id);
+
+        public async Task<Author> Insert(Author entity)
+        {
+            await context.Authors.AddAsync(entity);
+            return entity;
         }
 
-        public Task<IEnumerable<Author>> GetAll()
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            var book = await context.Authors.FindAsync(id);
+            if (book != null)
+            {
+                context.Remove(book);
+            }
         }
 
-        public Task<Author> GetById(int id)
+        public async Task Save()
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<Author> Insert(Author entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Save()
-        {
-            throw new NotImplementedException();
+            await context.SaveChangesAsync();
         }
     }
 }
